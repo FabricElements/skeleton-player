@@ -1,0 +1,32 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="skeleton-player-behavior.html">
+
+<!--
+`skeleton-video-player`
+Custom Video player using material design
+
+@group skeleton-player
+@pseudoElement skeleton-video-player
+@demo demo/index.html
+-->
+
+<dom-module id="skeleton-video-player">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'skeleton-video-player',
+      properties: {},
+      behaviors: [
+        Fabric.SkeletonPlayerBehavior
+      ],
+    });
+  </script>
+</dom-module>

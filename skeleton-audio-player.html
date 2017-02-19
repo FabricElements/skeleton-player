@@ -1,0 +1,32 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="skeleton-player-behavior.html">
+
+<!--
+`skeleton-audio-player`
+Custom Audio player using material design
+
+@group skeleton-player
+@pseudoElement skeleton-audio-player
+@demo demo/index.html
+-->
+
+<dom-module id="skeleton-audio-player">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'skeleton-audio-player',
+      properties: {},
+      behaviors: [
+        Fabric.SkeletonPlayerBehavior
+      ],
+    });
+  </script>
+</dom-module>
