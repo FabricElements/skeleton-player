@@ -1,8 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-`Fabric-quiz-behavior`
-Quiz behavior.
+`skeleton-player-behavior`
+Skeleton player behavior
 
 @demo demo/index.html
 -->
@@ -22,7 +22,110 @@ Quiz behavior.
    */
   Fabric.SkeletonPlayerBehavior = {
     properties: {
+      src: {
+        type: String,
+        value: null
+      },
+      autoplay: {
+        type: Boolean,
+        value: false
+      },
+      controls: {
+        type: Boolean,
+        value: false
+      },
+      preload: {
+        type: String,
+        value: "none"
+      },
+      loop: {
+        type: Boolean,
+        value: false
+      },
+      muted: {
+        type: Boolean,
+        value: false
+      },
+      playing: {
+        type: Boolean,
+        value: false
+      },
+      paused: {
+        type: Boolean,
+        value: false
+      },
+      ended: {
+        type: Boolean,
+        value: false
+      },
+      timeOffset: {
+        type: Number,
+        value: 0
+      },
+      percentagePlayed: {
+        type: Number,
+        value: 0
+      },
+      duration: {
+        type: Number,
+        value: 0
+      }
+    },
+    listeners: {
+      'play': "play",
+      'pause': "pause",
+      'change-progress': "changeProgress"
+    },
+    attached: function () {
 
     },
+    _loadedMetadata: function () {
+      const player = this.$$("#player");
+      this.duration = player.duration;
+    },
+    play: function () {
+      this.$$("#player").play();
+    },
+    pause: function () {
+      this.$$("#player").pause();
+    },
+    _playing: function () {
+      this.playing = true;
+      this.paused = false;
+      this.ended = false;
+      const player = this.$$("#player");
+      this.played = player.played;
+      this._setTimeLeft();
+      this.fire("skeleton-player-state-change", "playing");
+    },
+    _ended: function () {
+      this.playing = false;
+      this.paused = false;
+      this.ended = true;
+      this.fire("skeleton-player-state-change", "ended");
+    },
+    _progress: function () {
+      const player = this.$$("#player");
+      this.progress = (player.currentTime / this.duration) * 100;
+    },
+    _paused: function () {
+      this.playing = false;
+      this.ended = false;
+      this.paused = true;
+      this.fire("skeleton-player-state-change", "paused");
+    },
+    _setBase: function () {
+      this.totalTime = this.duration;
+    },
+    _setTimeLeft: function () {
+      const player = this.$$("#player");
+    },
+    _updatePlayPosition: function () {
+
+    },
+    changeProgress: function (e) {
+      const player = this.$$("#player");
+      player.currentTime = this.duration * e.detail;
+    }
   };
 </script>
