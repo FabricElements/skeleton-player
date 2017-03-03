@@ -141,6 +141,7 @@ Skeleton player behavior
     changeProgress: function (e) {
       const player = this.$$("#player");
       player.currentTime = this.duration * e.detail;
+      if (!this.playing) this.fire('play');
     }
   };
 </script>
