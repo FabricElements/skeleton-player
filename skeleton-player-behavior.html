@@ -69,6 +69,14 @@ Skeleton player behavior
       duration: {
         type: Number,
         value: 0
+      },
+      disabled: {
+        type: Boolean,
+        value: true
+      },
+      error: {
+        type: Boolean,
+        value: false
       }
     },
     listeners: {
@@ -82,6 +90,12 @@ Skeleton player behavior
     _loadedMetadata: function () {
       const player = this.$$("#player");
       this.duration = player.duration;
+      this.disabled = false;
+      this.error = false;
+    },
+    _error: function () {
+      this.error = true;
+      this.disabled = true;
     },
     play: function () {
       this.$$("#player").play();
@@ -93,6 +107,7 @@ Skeleton player behavior
       this.playing = true;
       this.paused = false;
       this.ended = false;
+      this.error = false;
       const player = this.$$("#player");
       this.played = player.played;
       this._setTimeLeft();

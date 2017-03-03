@@ -18,14 +18,28 @@ Custom Audio player using material design
         display: block;
       }
     </style>
-    <audio id="player" src="{{src}}" autoplay="{{autoplay}}" preload="{{preload}}" loop="{{loop}}" muted="{{muted}}"
-           on-pause="_paused" on-play="_playing" on-loadedmetadata="_loadedMetadata" hidden on-timeupdate="_progress" on-ended="_ended"></audio>
+    <audio id="player"
+           hidden
+           src$="[[src]]"
+           autoplay="[[autoplay]]"
+           preload="[[preload]]"
+           loop="[[loop]]"
+           muted="[[muted]]"
+           on-pause="_paused"
+           on-play="_playing"
+           on-loadedmetadata="_loadedMetadata"
+           on-timeupdate="_progress"
+           on-ended="_ended"
+           on-error="_error"></audio>
     <skeleton-player-controls id="controls"
-                              controls="{{controls}}"
-                              playing="{{playing}}"
-                              progress="{{progress}}"
-                              ended="{{ended}}"
-                              paused="{{paused}}"></skeleton-player-controls>
+                              controls="[[controls]]"
+                              playing="[[playing]]"
+                              progress="[[progress]]"
+                              ended="[[ended]]"
+                              paused="[[paused]]"
+                              disabled$="[[disabled]]"
+                              error$="[[error]]"
+    ></skeleton-player-controls>
   </template>
   <script>
     Polymer({
