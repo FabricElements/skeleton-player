@@ -88,7 +88,7 @@ Custom Audio player using material design
       ></paper-icon-button>
       <skeleton-player-slider value="[[progress]]"
                               secondary-progress="[[secondaryProgress]]"
-                              immediate-value="[[immediateValue]]"
+                              immediate-value="{{immediateValue}}"
                               disabled$="[[disabled]]"
       ></skeleton-player-slider>
     </template>
@@ -137,9 +137,8 @@ Custom Audio player using material design
         this.fire('pause');
       },
       change: function () {
-        let position = this.progress / 100;
+        let position = this.immediateValue / 100;
         this.fire('change-progress', position);
-        if (!this.playing) this.fire('play');
       }
     });
   </script>
