@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="skeleton-player-behavior.html">
-<link rel="import" href="skeleton-player-controls.html">
+<link rel="import" href="behaviors/skeleton-player-behavior.html">
+<link rel="import" href="skeleton-player-controls/skeleton-player-controls.html">
 
 <!--
 `skeleton-audio-player`
@@ -30,7 +30,8 @@ Custom Audio player using material design
            on-loadedmetadata="_loadedMetadata"
            on-timeupdate="_progress"
            on-ended="_ended"
-           on-error="_error"></audio>
+           on-error="_error"
+    ></audio>
     <skeleton-player-controls id="controls"
                               controls="[[controls]]"
                               playing="[[playing]]"
