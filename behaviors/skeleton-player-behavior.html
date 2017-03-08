@@ -158,13 +158,13 @@ Skeleton player behavior
       if (!this.playing) this.fire('play');
     },
     _checkTimeEvents: function (time) {
+      if (!this.events) return;
       time = Math.floor(time);
-      let events = this.events;
 
-      for (let event in events) {
-        if (events.hasOwnProperty(event) && events[event].hasOwnProperty("event") && !events[event]["fired"] && event == time) {
-          events[event]["fired"] = true
-          this.fire("skeleton-player-event", events[event]['event']);
+      for (let event in this.events) {
+        if (this.events.hasOwnProperty(event) && this.events[event].hasOwnProperty("event") && !this.events[event]["fired"] && event == time) {
+          this.events[event]["fired"] = true
+          this.fire("skeleton-player-event", this.events[event]['event']);
         }
       }
     }
