@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../../polymer/polymer.html">
 
 <!--
 `skeleton-player-behavior`
@@ -77,6 +77,19 @@ Skeleton player behavior
       error: {
         type: Boolean,
         value: false
+      },
+      events: {
+        type: Array,
+        value: null
+//        value: function() { return {}; }
+//        value: [
+//          {
+//            1: "hello",
+//          },
+//          {
+//            2: "hola",
+//          }
+//        ]
       }
     },
     listeners: {
@@ -122,6 +135,7 @@ Skeleton player behavior
     _progress: function () {
       const player = this.$$("#player");
       this.progress = (player.currentTime / this.duration) * 100;
+      this._checkTimeEvents(player.currentTime);
     },
     _paused: function () {
       this.playing = false;
@@ -142,6 +156,17 @@ Skeleton player behavior
       const player = this.$$("#player");
       player.currentTime = this.duration * e.detail;
       if (!this.playing) this.fire('play');
+    },
+    _checkTimeEvents: function (time) {
+      time = Math.floor(time);
+      let events = this.events;
+
+      for (let event in events) {
+        if (events.hasOwnProperty(event) && events[event].hasOwnProperty("event") && !events[event]["fired"] && event == time) {
+          events[event]["fired"] = true
+          this.fire("skeleton-player-event", events[event]['event']);
+        }
+      }
     }
   };
 </script>

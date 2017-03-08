@@ -19,8 +19,10 @@
 <div class="vertical-section-container centered">
   <h3>Basic skeleton-audio-player demo</h3>
   <demo-snippet>
-    <template>
-      <skeleton-audio-player src="http://nadikun.com/audio/pink-shades-o-pnr.mp3" controls preload></skeleton-audio-player>
+    <template is="dom-bind">
+      <skeleton-audio-player src="http://nadikun.com/audio/pink-shades-o-pnr.mp3" controls
+                             preload
+                             events='{ "1": {"event": "event1"}, "2": {"event": "event2"}, "3": {"event": "event3"} }'></skeleton-audio-player>
     </template>
   </demo-snippet>
 </div>
