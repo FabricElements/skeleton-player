@@ -96,13 +96,21 @@ Skeleton player behavior
     attached: function () {
 
     },
-    _loadedMetadata: function () {
-      const player = this.$$("#player");
-      this.duration = player.duration;
+    _resetProperties: function () {
       this.disabled = false;
       this.error = false;
+      this.paused = false;
+      this.ended = false;
+      this.playing = false;
+      this.paused = false;
+    },
+    _loadedMetadata: function () {
+      this._resetProperties();
+      const player = this.$$("#player");
+      this.duration = player.duration;
     },
     _error: function () {
+      this._resetProperties();
       this.error = true;
       this.disabled = true;
     },
@@ -113,18 +121,15 @@ Skeleton player behavior
       this.$$("#player").pause();
     },
     _playing: function () {
+      this._resetProperties();
       this.playing = true;
-      this.paused = false;
-      this.ended = false;
-      this.error = false;
       const player = this.$$("#player");
       this.played = player.played;
       this._setTimeLeft();
       this.fire("skeleton-player-state-change", "playing");
     },
     _ended: function () {
-      this.playing = false;
-      this.paused = false;
+      this._resetProperties();
       this.ended = true;
       this.fire("skeleton-player-state-change", "ended");
     },
@@ -134,8 +139,7 @@ Skeleton player behavior
       this._checkTimeEvents(player.currentTime);
     },
     _paused: function () {
-      this.playing = false;
-      this.ended = false;
+      this._resetProperties();
       this.paused = true;
       this.fire("skeleton-player-state-change", "paused");
     },
@@ -152,29 +156,18 @@ Skeleton player behavior
       const player = this.$$("#player");
       player.currentTime = this.duration * e.detail;
       if (!this.playing) this.fire('play');
-      this._resetAllBeforeTime();
+      this._resetEventsBeforeNewTime();
     },
-    _resetAllBeforeTime: function () {
+    _resetEventsBeforeNewTime: function () {
       const player = this.$$("#player");
       let time = player.currentTime;
       time = Math.floor(time);
-      const events = this.events;
 
-      if (!events) return;
-      let baseEvents = [];
-      for (let event in events) {
+      if (!this.finalEvents) return;
+      for (let event in this.finalEvents) {
         if (!event) return;
-        let eventBase = {
-          event: events[event],
-          time: event,
-          fired: false
-        };
-        if (time <= event) {
-          eventBase["fired"] = true;
-        }
-        baseEvents.push(eventBase);
+        if (this.finalEvents[event].time >= time) this.finalEvents[event]["fired"] = false;
       }
-      if (baseEvents[0]) this.finalEvents = baseEvents;
     },
     _eventsObserver: function (events) {
       if (!events) return;
@@ -199,7 +192,6 @@ Skeleton player behavior
         if (!events[event]["fired"] && time >= events[event]["time"]) {
           this.finalEvents[event]["fired"] = true;
           this.fire("skeleton-player-event", events[event]['event']);
-          console.log("fired: " + events[event]['event']);
           break;
         }
       }
