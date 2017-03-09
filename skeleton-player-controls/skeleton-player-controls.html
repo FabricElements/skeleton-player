@@ -4,6 +4,7 @@
 <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../paper-progress/paper-progress.html">
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../paper-spinner/paper-spinner.html">
 
 <link rel="import" href="../behaviors/skeleton-player-behavior.html">
 <link rel="import" href="skeleton-player-slider.html">
@@ -22,9 +23,6 @@ Custom Audio player using material design
     <style>
       :host {
         display: block;
-        @apply(--layout);
-        @apply(--layout-justified);
-        @apply(--layout-center);
         cursor: default;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -37,11 +35,31 @@ Custom Audio player using material design
         background-color: var(--skeleton-player-slider-container-color-disabled, var(--paper-grey-500));
       }
 
+      nav {
+        display: block;
+        @apply(--layout);
+        @apply(--layout-justified);
+        @apply(--layout-center);
+      }
+
+      #actions {
+        min-width: 50px;
+        height: 50px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        background-color: var(--skeleton-player-action-background, var(--paper-grey-800));
+      }
+
+      #actions paper-spinner {
+        width: 30px;
+        height: 30px;
+        margin: 10px;
+      }
+
       paper-icon-button {
         width: 50px;
         height: 50px;
         color: var(--skeleton-player-button-color, #ffffff);
-        background-color: var(--skeleton-player-slider-active-color, var(--paper-grey-900));
       }
 
       :host[disabled] paper-icon-button {
@@ -53,47 +71,51 @@ Custom Audio player using material design
         @apply(--layout-flex-auto);
       }
 
-      .hidden-true,
-      .ended-true {
-        display: none;
+      paper-spinner {
+        --paper-spinner-color: var(--player-spinner-color, var(--paper-blue-a100));
       }
+
+      .hidden-true,
       [hidden] {
         display: none;
       }
     </style>
     <template is="dom-if" if="[[controls]]">
-      <paper-icon-button icon="warning"
-                         hidden$="[[!error]]"
-                         disabled$="[[disabled]]"
-      ></paper-icon-button>
-      <paper-icon-button icon="block"
-                         hidden$="[[!disabled]]"
-                         disabled$="[[disabled]]"
-                         class$="hidden-[[error]]"
-      ></paper-icon-button>
-      <paper-icon-button icon="av:replay"
-                         on-tap="play"
-                         hidden$="[[!ended]]"
-                         disabled$="[[disabled]]"
-                         class$="hidden-[[disabled]]"
-      ></paper-icon-button>
-      <paper-icon-button icon="av:play-arrow"
-                         on-tap="play"
-                         hidden$="[[playing]]"
-                         class$="ended-[[ended]] hidden-[[disabled]]"
-                         disabled$="[[disabled]]"
-      ></paper-icon-button>
-      <paper-icon-button icon="av:pause"
-                         on-tap="pause"
-                         hidden$="[[!playing]]"
-                         disabled$="[[disabled]]"
-                         class$="hidden-[[disabled]]"
-      ></paper-icon-button>
-      <skeleton-player-slider value="[[progress]]"
-                              secondary-progress="[[secondaryProgress]]"
-                              immediate-value="{{immediateValue}}"
-                              disabled$="[[disabled]]"
-      ></skeleton-player-slider>
+      <nav>
+        <div id="actions">
+          <paper-spinner active$="[[!loaded]]" class$="hidden-[[loaded]]"></paper-spinner>
+          <paper-icon-button icon="warning"
+                             disabled$="[[disabled]]"
+                             class$="hidden-[[!error]]"
+          ></paper-icon-button>
+          <paper-icon-button icon="block"
+                             hidden$="[[!disabled]]"
+                             disabled$="[[disabled]]"
+                             class$="hidden-[[error]]"
+          ></paper-icon-button>
+          <paper-icon-button icon="av:replay"
+                             on-tap="play"
+                             hidden$="[[!ended]]"
+                             disabled$="[[disabled]]"
+                             class$="hidden-[[disabled]] hidden-[[!loaded]]"
+          ></paper-icon-button>
+          <paper-icon-button icon="av:play-arrow"
+                             on-tap="play"
+                             class$="hidden-[[ended]] hidden-[[disabled]] hidden-[[playing]] hidden-[[!loaded]]"
+                             disabled$="[[disabled]]"
+          ></paper-icon-button>
+          <paper-icon-button icon="av:pause"
+                             on-tap="pause"
+                             disabled$="[[disabled]]"
+                             class$="hidden-[[disabled]] hidden-[[paused]] hidden-[[!playing]] hidden-[[!loaded]]"
+          ></paper-icon-button>
+        </div>
+        <skeleton-player-slider value="[[progress]]"
+                                secondary-progress="[[secondaryProgress]]"
+                                immediate-value="{{immediateValue}}"
+                                disabled$="[[disabled]]"
+        ></skeleton-player-slider>
+      </nav>
     </template>
   </template>
 
@@ -120,9 +142,13 @@ Custom Audio player using material design
         },
         disabled: {
           type: Boolean,
-          value: true
+          value: false
         },
         error: {
+          type: Boolean,
+          value: false
+        },
+        loaded: {
           type: Boolean,
           value: false
         },
