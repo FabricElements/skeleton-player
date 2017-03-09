@@ -80,16 +80,12 @@ Skeleton player behavior
       },
       events: {
         type: Array,
+        value: null,
+        observer: "_eventsObserver",
+      },
+      finalEvents: {
+        type: Object,
         value: null
-//        value: function() { return {}; }
-//        value: [
-//          {
-//            1: "hello",
-//          },
-//          {
-//            2: "hola",
-//          }
-//        ]
       }
     },
     listeners: {
@@ -156,15 +152,55 @@ Skeleton player behavior
       const player = this.$$("#player");
       player.currentTime = this.duration * e.detail;
       if (!this.playing) this.fire('play');
+      this._resetAllBeforeTime();
+    },
+    _resetAllBeforeTime: function () {
+      const player = this.$$("#player");
+      let time = player.currentTime;
+      time = Math.floor(time);
+      const events = this.events;
+
+      if (!events) return;
+      let baseEvents = [];
+      for (let event in events) {
+        if (!event) return;
+        let eventBase = {
+          event: events[event],
+          time: event,
+          fired: false
+        };
+        if (time <= event) {
+          eventBase["fired"] = true;
+        }
+        baseEvents.push(eventBase);
+      }
+      if (baseEvents[0]) this.finalEvents = baseEvents;
+    },
+    _eventsObserver: function (events) {
+      if (!events) return;
+      let baseEvents = [];
+      for (let event in events) {
+        if (!event) return;
+        let eventBase = {
+          event: events[event],
+          time: event,
+          fired: false
+        };
+        baseEvents.push(eventBase);
+      }
+      if (baseEvents[0]) this.finalEvents = baseEvents;
     },
     _checkTimeEvents: function (time) {
-      if (!this.events) return;
+      if (!this.finalEvents) return;
       time = Math.floor(time);
+      const events = this.finalEvents;
 
-      for (let event in this.events) {
-        if (this.events.hasOwnProperty(event) && this.events[event].hasOwnProperty("event") && !this.events[event]["fired"] && event == time) {
-          this.events[event]["fired"] = true
-          this.fire("skeleton-player-event", this.events[event]['event']);
+      for (let event in events) {
+        if (!events[event]["fired"] && time >= events[event]["time"]) {
+          this.finalEvents[event]["fired"] = true;
+          this.fire("skeleton-player-event", events[event]['event']);
+          console.log("fired: " + events[event]['event']);
+          break;
         }
       }
     }
