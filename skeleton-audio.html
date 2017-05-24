@@ -1,17 +1,8 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="behaviors/skeleton-player-behavior.html">
 <link rel="import" href="skeleton-player-controls/skeleton-player-controls.html">
 
-<!--
-`skeleton-audio-player`
-Custom Audio player using material design
-
-@group skeleton-player
-@pseudoElement skeleton-audio-player
-@demo demo/index.html
--->
-
-<dom-module id="skeleton-audio-player">
+<dom-module id="skeleton-audio">
   <template>
     <style>
       :host {
@@ -21,8 +12,8 @@ Custom Audio player using material design
     <audio id="player"
            hidden
            type$="[[type]]"
-           src$="[[src]]"
-           autoplay="[[autoplay]]"
+           src="[[src]]"
+           autoplay$="[[autoplay]]"
            preload="[[preload]]"
            loop="[[loop]]"
            muted="[[muted]]"
@@ -34,24 +25,32 @@ Custom Audio player using material design
            on-error="_error"
     ></audio>
     <skeleton-player-controls id="controls"
-                              controls="[[controls]]"
+                              controls$="[[controls]]"
                               playing="[[playing]]"
                               progress="[[progress]]"
-                              ended="[[ended]]"
-                              paused="[[paused]]"
+                              ended$="[[ended]]"
+                              paused$="[[paused]]"
                               disabled$="[[disabled]]"
                               error$="[[error]]"
                               loaded$="[[loaded]]"
     ></skeleton-player-controls>
   </template>
-  <script>
-    Polymer({
 
-      is: 'skeleton-audio-player',
-      properties: {},
-      behaviors: [
-        Fabric.SkeletonPlayerBehavior
-      ],
-    });
+  <script>
+    /**
+     * `skeleton-audio-player`
+     * Custom Audio player using material design
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class SkeletonAudio extends SkeletonPlayerBehavior(Polymer.Element) {
+      static get is() {
+        return 'skeleton-audio';
+      }
+    }
+
+    window.customElements.define(SkeletonAudio.is, SkeletonAudio);
   </script>
 </dom-module>

@@ -10,7 +10,7 @@
 
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../skeleton-player.html">
+  <link rel="import" href="../skeleton-audio.html">
 
   <style is="custom-style" include="demo-pages-shared-styles">
   </style>
@@ -19,10 +19,12 @@
 <div class="vertical-section-container centered">
   <h3>Basic skeleton-audio-player demo</h3>
   <demo-snippet>
-    <template is="dom-bind">
-      <skeleton-audio-player src="http://nadikun.com/audio/pink-shades-o-pnr.mp3" controls
-                             preload autoplay
-                             events='{ "1": "event1", "6": "event2", "10": "event3"}'></skeleton-audio-player>
+    <template>
+      <skeleton-audio src="http://nadikun.com/audio/pink-shades-o-pnr.mp3"
+                             controls
+                             preload
+                             autoplay
+                             events='{ "1": "event1", "6": "event2", "10": "event3"}'></skeleton-audio>
     </template>
   </demo-snippet>
 </div>
@@ -30,7 +32,7 @@
   <h3>Basic skeleton-video-player demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-video-player></skeleton-video-player>
+      <!--<skeleton-video-player></skeleton-video-player>-->
     </template>
   </demo-snippet>
 </div>

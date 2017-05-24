@@ -1,172 +1,175 @@
-<link rel="import" href="../../polymer/polymer.html">
-
-<!--
-`skeleton-player-behavior`
-Skeleton player behavior
-
-@demo demo/index.html
--->
-
 <script>
-  'use strict';
-  window.Fabric = window.Fabric || {};
+  const SkeletonPlayerBehavior = superclass => class extends superclass {
+    constructor() {
+      super();
+    }
 
-  /**
-   Use `Polymer.SkeletonPlayerBehavior` to implement an element that can be hidden or shown, and displays
-   on top of other content. It includes an optional backdrop, and can be used to implement a variety
-   of UI controls including dialogs and drop downs. Multiple overlays may be displayed at once.
-   See the [demo source code](https://github.com/PolymerElements/iron-overlay-behavior/blob/master/demo/simple-overlay.html)
-   for an example.
-   @demo demo/index.html
-   @polymerBehavior Fabric.SkeletonPlayerBehavior
-   */
-  Fabric.SkeletonPlayerBehavior = {
-    properties: {
-      type: {
-        type: String,
-        value: null
-      },
-      src: {
-        type: String,
-        value: null
-      },
-      autoplay: {
-        type: Boolean,
-        value: false
-      },
-      controls: {
-        type: Boolean,
-        value: false
-      },
-      preload: {
-        type: String,
-        value: "none"
-      },
-      loop: {
-        type: Boolean,
-        value: false
-      },
-      muted: {
-        type: Boolean,
-        value: false
-      },
-      playing: {
-        type: Boolean,
-        value: false
-      },
-      paused: {
-        type: Boolean,
-        value: false
-      },
-      ended: {
-        type: Boolean,
-        value: false
-      },
-      timeOffset: {
-        type: Number,
-        value: 0
-      },
-      percentagePlayed: {
-        type: Number,
-        value: 0
-      },
-      duration: {
-        type: Number,
-        value: 0
-      },
-      disabled: {
-        type: Boolean,
-        value: false
-      },
-      error: {
-        type: Boolean,
-        value: false
-      },
-      events: {
-        type: Array,
-        value: null,
-        observer: "_eventsObserver",
-      },
-      finalEvents: {
-        type: Object,
-        value: null
-      },
-      loaded: {
-        type: Boolean,
-        value: false
-      }
-    },
-    listeners: {
-      'play': "play",
-      'pause': "pause",
-      'change-progress': "changeProgress"
-    },
-    attached: function () {
+    connectedCallback() {
+      super.connectedCallback();
+      this.addEventListener('play', e => this.play(e));
+      this.addEventListener('pause', e => this.pause(e));
+      this.addEventListener('change-progress', e => this.changeProgress(e));
+    }
 
-    },
-    _resetProperties: function () {
+    static get properties() {
+      return {
+        type: {
+          type: String,
+          value: null
+        },
+        src: {
+          type: String,
+          value: null
+        },
+        autoplay: {
+          type: Boolean,
+          value: false
+        },
+        controls: {
+          type: Boolean,
+          value: false
+        },
+        preload: {
+          type: String,
+          value: "none"
+        },
+        loop: {
+          type: Boolean,
+          value: false
+        },
+        muted: {
+          type: Boolean,
+          value: false
+        },
+        playing: {
+          type: Boolean,
+          value: false
+        },
+        paused: {
+          type: Boolean,
+          value: false
+        },
+        ended: {
+          type: Boolean,
+          value: false
+        },
+        timeOffset: {
+          type: Number,
+          value: 0
+        },
+        percentagePlayed: {
+          type: Number,
+          value: 0
+        },
+        duration: {
+          type: Number,
+          value: 0
+        },
+        disabled: {
+          type: Boolean,
+          value: false
+        },
+        error: {
+          type: Boolean,
+          value: false
+        },
+        events: {
+          type: Array,
+          value: null,
+          observer: "_eventsObserver",
+        },
+        finalEvents: {
+          type: Object,
+          value: null
+        },
+        loaded: {
+          type: Boolean,
+          value: false
+        },
+        progress: {
+          type: Number,
+          value: 0
+        },
+      };
+    }
+
+    _resetProperties() {
       this.disabled = false;
       this.error = false;
       this.paused = false;
       this.ended = false;
       this.playing = false;
-    },
-    _loadedMetadata: function () {
+    }
+
+    _loadedMetadata() {
       this.loaded = true;
-      const player = this.$$("#player");
+      const player = this.shadowRoot.querySelector("#player");
       this.duration = player.duration;
-    },
-    _error: function () {
+    }
+
+    _error() {
       this._resetProperties();
       this.error = true;
       this.disabled = true;
-    },
-    play: function () {
-      this.$$("#player").play();
-    },
-    pause: function () {
-      this.$$("#player").pause();
-    },
-    _playing: function () {
+    }
+
+    play() {
+      this.shadowRoot.querySelector("#player").play();
+    }
+
+    pause() {
+      this.shadowRoot.querySelector("#player").pause();
+    }
+
+    _playing() {
       this._resetProperties();
-      const player = this.$$("#player");
+      const player = this.shadowRoot.querySelector("#player");
       this.played = player.played;
       this.playing = true;
       this._setTimeLeft();
-      this.fire("skeleton-player-state-change", "playing");
-    },
-    _ended: function () {
+//        this.fire("skeleton-player-state-change", "playing");
+    }
+
+    _ended() {
       this._resetProperties();
       this.ended = true;
       this.fire("skeleton-player-state-change", "ended");
-    },
-    _progress: function () {
-      const player = this.$$("#player");
+    }
+
+    _progress() {
+      const player = this.shadowRoot.querySelector("#player");
       this.progress = (player.currentTime / this.duration) * 100;
       this._checkTimeEvents(player.currentTime);
-    },
-    _paused: function () {
+    }
+
+    _paused() {
       this._resetProperties();
       this.paused = true;
-      this.fire("skeleton-player-state-change", "paused");
-    },
-    _setBase: function () {
-      this.totalTime = this.duration;
-    },
-    _setTimeLeft: function () {
-      const player = this.$$("#player");
-    },
-    _updatePlayPosition: function () {
+//        this.fire("skeleton-player-state-change", "paused");
+    }
 
-    },
-    changeProgress: function (e) {
-      const player = this.$$("#player");
+    _setBase() {
+      this.totalTime = this.duration;
+    }
+
+//
+    _setTimeLeft() {
+      const player = this.shadowRoot.querySelector("#player");
+    }
+
+    _updatePlayPosition() {
+
+    }
+
+    changeProgress(e) {
+      const player = this.shadowRoot.querySelector("#player");
       player.currentTime = this.duration * e.detail;
-      if (!this.playing) this.fire('play');
+//        if (!this.playing) this.fire('play');
       this._resetEventsBeforeNewTime();
-    },
-    _resetEventsBeforeNewTime: function () {
-      const player = this.$$("#player");
+    }
+
+    _resetEventsBeforeNewTime() {
+      const player = this.shadowRoot.querySelector("#player");
       let time = player.currentTime;
       time = Math.floor(time);
 
@@ -175,8 +178,9 @@ Skeleton player behavior
         if (!event) return;
         if (this.finalEvents[event].time >= time) this.finalEvents[event]["fired"] = false;
       }
-    },
-    _eventsObserver: function (events) {
+    }
+
+    _eventsObserver(events) {
       if (!events) return;
       let baseEvents = [];
       for (let event in events) {
@@ -189,8 +193,9 @@ Skeleton player behavior
         baseEvents.push(eventBase);
       }
       if (baseEvents[0]) this.finalEvents = baseEvents;
-    },
-    _checkTimeEvents: function (time) {
+    }
+
+    _checkTimeEvents(time) {
       if (!this.finalEvents) return;
       time = Math.floor(time);
       const events = this.finalEvents;
@@ -198,10 +203,10 @@ Skeleton player behavior
       for (let event in events) {
         if (!events[event]["fired"] && time >= events[event]["time"]) {
           this.finalEvents[event]["fired"] = true;
-          this.fire("skeleton-player-event", events[event]['event']);
-          break;
+//            this.fire("skeleton-player-event", events[event]['event']);
         }
       }
     }
+
   };
 </script>

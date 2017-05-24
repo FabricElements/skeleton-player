@@ -9,15 +9,6 @@
 <link rel="import" href="../behaviors/skeleton-player-behavior.html">
 <link rel="import" href="skeleton-player-slider.html">
 
-<!--
-`skeleton-player-controls`
-Custom Audio player using material design
-
-@group skeleton-player
-@pseudoElement skeleton-player-controls
-@demo demo/index.html
--->
-
 <dom-module id="skeleton-player-controls">
   <template>
     <style>
@@ -128,6 +119,14 @@ Custom Audio player using material design
           type: Number,
           notify: true
         },
+        secondaryProgress: {
+          type: Number,
+          value: 0
+        },
+        immediateValue: {
+          type: Number,
+          value: 0
+        },
         ended: {
           type: Boolean,
           value: false
@@ -152,6 +151,10 @@ Custom Audio player using material design
           type: Boolean,
           value: false
         },
+        controls: {
+          type: Boolean,
+          value: false
+        }
       },
       listeners: {
         "change": "change"
