@@ -1,0 +1,58 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="behaviors/skeleton-player-behavior.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="elements/skeleton-player-slider.html">
+<link rel="import" href="icons.html">
+
+<dom-module id="skeleton-audio">
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+      }
+
+      #action {
+        margin-right: 5px;
+      }
+    </style>
+    <audio id="player"
+           hidden
+           type$="[[type]]"
+           src="[[src]]"
+           autoplay$="[[autoplay]]"
+           preload="[[preload]]"
+           loop="[[loop]]"
+           muted="[[muted]]"
+    ></audio>
+
+    <paper-icon-button id="action" disabled$="[[!loaded]]"></paper-icon-button>
+
+    <skeleton-player-slider id="slider"
+                            value="[[progress]]"
+                            secondary-progress="[[secondaryProgress]]"
+                            immediate-value="{{immediateValue}}"
+                            disabled$="[[disabled]]"
+    ></skeleton-player-slider>
+  </template>
+
+  <script>
+    /**
+     * `skeleton-audio-player`
+     * Custom Audio player using material design
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class SkeletonAudio extends SkeletonPlayerBehavior(Polymer.Element) {
+      static get is() {
+        return 'skeleton-audio';
+      }
+    }
+
+    window.customElements.define(SkeletonAudio.is, SkeletonAudio);
+  </script>
+</dom-module>

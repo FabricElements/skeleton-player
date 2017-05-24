@@ -66,16 +66,17 @@ Custom property | Description | Default
         @apply(--layout);
         @apply(--layout-justified);
         @apply(--layout-center);
+        @apply --layout-flex-auto;
         cursor: default;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        --paper-progress-active-color: var(--skeleton-player-slider-active-color, --paper-grey-800);
-        --paper-progress-secondary-color: var(--skeleton-player-slider-secondary-color, --paper-grey-300);
-        --paper-progress-disabled-active-color: var(--skeleton-player-slider-disabled-active-color, --paper-grey-400);
-        --paper-progress-disabled-secondary-color: var(--skeleton-player-slider-disabled-secondary-color, --paper-grey-400);
+        --paper-progress-active-color: var(--skeleton-player-slider-active-color, var(--paper-grey-800));
+        --paper-progress-secondary-color: var(--skeleton-player-slider-secondary-color, var(--paper-grey-300));
+        --paper-progress-disabled-active-color: var(--skeleton-player-slider-disabled-active-color, var(--paper-grey-400));
+        --paper-progress-disabled-secondary-color: var(--skeleton-player-slider-disabled-secondary-color, var(--paper-grey-400));
         --calculated-skeleton-player-slider-height: var(--skeleton-player-slider-height, 50px);
       }
 
@@ -108,7 +109,7 @@ Custom property | Description | Default
         height: 100%;
         width: 100%;
         background-color: var(--skeleton-player-slider-bar-color, transparent);
-        --paper-progress-container-color: var(--skeleton-player-slider-container-color, --paper-grey-100);
+        --paper-progress-container-color: var(--skeleton-player-slider-container-color, var(--paper-grey-100));
         --paper-progress-height: var(--calculated-skeleton-player-slider-height);
       }
 
@@ -136,7 +137,7 @@ Custom property | Description | Default
       .slider-knob-inner {
         width: 2px;
         height: 100%;
-        background-color: var(--skeleton-player-slider-knob-color, --paper-grey-700);
+        background-color: var(--skeleton-player-slider-knob-color, var(--paper-grey-700));
 
         -moz-box-sizing: border-box;
         box-sizing: border-box;
@@ -153,13 +154,13 @@ Custom property | Description | Default
       }
 
       .disabled > .slider-knob > .slider-knob-inner {
-        background-color: var(--skeleton-player-slider-disabled-knob-color, --paper-grey-400);
+        background-color: var(--skeleton-player-slider-disabled-knob-color, var(--paper-grey-400));
         -webkit-transform: scale3d(0.75, 0.75, 1);
         transform: scale3d(0.75, 0.75, 1);
       }
 
       paper-ripple {
-        color: var(--skeleton-player-slider-knob-color, --paper-grey-700);
+        color: var(--skeleton-player-slider-knob-color, var(--paper-grey-700));
       }
     </style>
 
