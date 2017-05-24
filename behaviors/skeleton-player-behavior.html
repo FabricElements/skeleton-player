@@ -107,6 +107,14 @@
           type: String,
           value: "player:loop",
           observer: "_iconObserver"
+        },
+        timeTotal: {
+          type: String,
+          value: "0:00"
+        },
+        timeLeft: {
+          type: String,
+          value: "0:00"
         }
       };
     }
@@ -140,6 +148,9 @@
       this.loaded = true;
       const player = this.shadowRoot.querySelector("#player");
       this.duration = player.duration;
+      const baseTime = this._SecToMin(player.duration);
+      this.timeLeft = baseTime;
+      this.timeTotal = baseTime;
 
       this.icon = "player:play-arrow";
     }
@@ -184,7 +195,9 @@
 
     _progress() {
       const player = this.shadowRoot.querySelector("#player");
-      this.progress = (player.currentTime / this.duration) * 100;
+      this.progress = (player.currentTime / player.duration) * 100;
+      const baseTime = this._SecToMin(player.duration - player.currentTime);
+      this.timeLeft = baseTime;
       this._checkTimeEvents(player.currentTime);
     }
 
@@ -195,13 +208,10 @@
 //        this.fire("skeleton-player-state-change", "paused");
     }
 
-    _setBase() {
-      this.totalTime = this.duration;
-    }
-
 //
     _setTimeLeft() {
-      const player = this.shadowRoot.querySelector("#player");
+//      const player = this.shadowRoot.querySelector("#player");
+      console.log(this.duration);
     }
 
     _updatePlayPosition() {
@@ -260,6 +270,13 @@
       const action = this.shadowRoot.querySelector("#action");
       if (!action) return;
       action.icon = icon;
+    }
+
+    _SecToMin(seconds) {
+      if (seconds === 0) return '';
+      var minutes = Math.floor(seconds / 60);
+      var secondsToCalc = Math.floor(seconds % 60) + '';
+      return minutes + ':' + (secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc);
     }
 
   };
