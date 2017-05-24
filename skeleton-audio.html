@@ -1,12 +1,21 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="behaviors/skeleton-player-behavior.html">
-<link rel="import" href="skeleton-player-controls/skeleton-player-controls.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="skeleton-player-controls/skeleton-player-slider.html">
+<link rel="import" href="icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="skeleton-audio">
   <template>
     <style>
       :host {
         display: block;
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+      }
+
+      #action {
+        margin-right: 5px;
       }
     </style>
     <audio id="player"
@@ -17,23 +26,16 @@
            preload="[[preload]]"
            loop="[[loop]]"
            muted="[[muted]]"
-           on-pause="_paused"
-           on-play="_playing"
-           on-loadedmetadata="_loadedMetadata"
-           on-timeupdate="_progress"
-           on-ended="_ended"
-           on-error="_error"
     ></audio>
-    <skeleton-player-controls id="controls"
-                              controls$="[[controls]]"
-                              playing="[[playing]]"
-                              progress="[[progress]]"
-                              ended$="[[ended]]"
-                              paused$="[[paused]]"
-                              disabled$="[[disabled]]"
-                              error$="[[error]]"
-                              loaded$="[[loaded]]"
-    ></skeleton-player-controls>
+
+    <paper-icon-button id="action"></paper-icon-button>
+
+    <skeleton-player-slider id="slider"
+                            value="[[progress]]"
+                            secondary-progress="[[secondaryProgress]]"
+                            immediate-value="{{immediateValue}}"
+                            disabled$="[[disabled]]"
+    ></skeleton-player-slider>
   </template>
 
   <script>

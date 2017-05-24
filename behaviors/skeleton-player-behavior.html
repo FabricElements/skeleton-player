@@ -6,9 +6,11 @@
 
     connectedCallback() {
       super.connectedCallback();
-      this.addEventListener('play', e => this.play(e));
-      this.addEventListener('pause', e => this.pause(e));
-      this.addEventListener('change-progress', e => this.changeProgress(e));
+
+      this._actionListeners();
+      this._playerListeners();
+      // Listen for change event on the slider
+      this.addEventListener('change', e => this.changeProgress(e));
     }
 
     static get properties() {
@@ -88,9 +90,42 @@
         },
         progress: {
           type: Number,
-          value: 0
+          value: 0,
+          reflectToAttribute: true
         },
+        secondaryProgress: {
+          type: Number,
+          value: 0,
+          reflectToAttribute: true
+        },
+        immediateValue: {
+          type: Number,
+          value: 0,
+          reflectToAttribute: true
+        },
+        icon: {
+          type: String,
+          value: "player:loop",
+          observer: "_iconObserver"
+        }
       };
+    }
+
+    _actionListeners() {
+      const action = this.shadowRoot.querySelector("#action");
+      if (!action) return;
+      action.addEventListener('tap', e => this.togglePlay(e));
+    }
+
+    _playerListeners() {
+      const player = this.shadowRoot.querySelector("#player");
+      if (!player) return;
+      player.addEventListener('loadedmetadata', e => this._loadedMetadata(e));
+      player.addEventListener('play', e => this._playing(e));
+      player.addEventListener('pause', e => this._paused(e));
+      player.addEventListener('timeupdate', e => this._progress(e));
+      player.addEventListener('error', e => this._error(e));
+      player.addEventListener('ended', e => this._ended(e));
     }
 
     _resetProperties() {
@@ -105,12 +140,21 @@
       this.loaded = true;
       const player = this.shadowRoot.querySelector("#player");
       this.duration = player.duration;
+
+      this.icon = "player:play-arrow";
     }
 
     _error() {
       this._resetProperties();
       this.error = true;
       this.disabled = true;
+    }
+
+    togglePlay() {
+      const player = this.shadowRoot.querySelector("#player");
+      if (this.playing) this.pause();
+      if (this.paused) this.play();
+      if (this.ended) this.play();
     }
 
     play() {
@@ -128,12 +172,15 @@
       this.playing = true;
       this._setTimeLeft();
 //        this.fire("skeleton-player-state-change", "playing");
+      this.icon = "player:pause";
     }
 
     _ended() {
       this._resetProperties();
       this.ended = true;
-      this.fire("skeleton-player-state-change", "ended");
+//      this.fire("skeleton-player-state-change", "ended");
+      this.icon = "player:replay";
+
     }
 
     _progress() {
@@ -145,6 +192,7 @@
     _paused() {
       this._resetProperties();
       this.paused = true;
+      this.icon = "player:play-arrow";
 //        this.fire("skeleton-player-state-change", "paused");
     }
 
@@ -161,9 +209,10 @@
 
     }
 
-    changeProgress(e) {
+    changeProgress() {
+      let position = this.immediateValue / 100;
       const player = this.shadowRoot.querySelector("#player");
-      player.currentTime = this.duration * e.detail;
+      player.currentTime = this.duration * position;
 //        if (!this.playing) this.fire('play');
       this._resetEventsBeforeNewTime();
     }
@@ -206,6 +255,12 @@
 //            this.fire("skeleton-player-event", events[event]['event']);
         }
       }
+    }
+
+    _iconObserver(icon) {
+      const action = this.shadowRoot.querySelector("#action");
+      if (!action) return;
+      action.icon = icon;
     }
 
   };
