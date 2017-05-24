@@ -109,12 +109,16 @@
           observer: "_iconObserver"
         },
         timeTotal: {
-          type: String,
-          value: "0:00"
+          type: Number,
+          value: 0
         },
         timeLeft: {
-          type: String,
-          value: "0:00"
+          type: Number,
+          value: 0
+        },
+        timeCurrent: {
+          type: Number,
+          value: 0
         }
       };
     }
@@ -148,9 +152,8 @@
       this.loaded = true;
       const player = this.shadowRoot.querySelector("#player");
       this.duration = player.duration;
-      const baseTime = this._SecToMin(player.duration);
-      this.timeLeft = baseTime;
-      this.timeTotal = baseTime;
+      this.timeLeft = player.duration;
+      this.timeTotal = player.duration;
 
       this.icon = "player:play-arrow";
     }
@@ -180,7 +183,6 @@
       const player = this.shadowRoot.querySelector("#player");
       this.played = player.played;
       this.playing = true;
-      this._setTimeLeft();
 //        this.fire("skeleton-player-state-change", "playing");
       this.icon = "player:pause";
     }
@@ -196,8 +198,9 @@
     _progress() {
       const player = this.shadowRoot.querySelector("#player");
       this.progress = (player.currentTime / player.duration) * 100;
-      const baseTime = this._SecToMin(player.duration - player.currentTime);
-      this.timeLeft = baseTime;
+      this.timeLeft = player.duration - player.currentTime;
+      this.timeTotal = player.duration;
+      this.timeCurrent = player.currentTime;
       this._checkTimeEvents(player.currentTime);
     }
 
@@ -206,16 +209,6 @@
       this.paused = true;
       this.icon = "player:play-arrow";
 //        this.fire("skeleton-player-state-change", "paused");
-    }
-
-//
-    _setTimeLeft() {
-//      const player = this.shadowRoot.querySelector("#player");
-      console.log(this.duration);
-    }
-
-    _updatePlayPosition() {
-
     }
 
     changeProgress() {
@@ -272,7 +265,7 @@
       action.icon = icon;
     }
 
-    _SecToMin(seconds) {
+    _secToMin(seconds) {
       if (seconds === 0) return '';
       var minutes = Math.floor(seconds / 60);
       var secondsToCalc = Math.floor(seconds % 60) + '';
