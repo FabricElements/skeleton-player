@@ -152,9 +152,8 @@
 
     togglePlay() {
       const player = this.shadowRoot.querySelector("#player");
-      if (this.playing) this.pause();
-      if (this.paused) this.play();
-      if (this.ended) this.play();
+      if (this.playing) return this.pause();
+      this.play();
     }
 
     play() {
