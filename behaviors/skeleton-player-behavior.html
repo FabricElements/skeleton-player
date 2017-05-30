@@ -134,6 +134,7 @@
       if (!player) return;
       player.addEventListener('loadedmetadata', e => this._loadedMetadata(e));
       player.addEventListener('play', e => this._playing(e));
+      player.addEventListener('playing', e => this._playing(e));
       player.addEventListener('pause', e => this._paused(e));
       player.addEventListener('timeupdate', e => this._progress(e));
       player.addEventListener('error', e => this._error(e));
