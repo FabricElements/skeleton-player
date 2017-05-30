@@ -183,16 +183,15 @@
       const player = this.shadowRoot.querySelector("#player");
       this.played = player.played;
       this.playing = true;
-//        this.fire("skeleton-player-state-change", "playing");
+      this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {detail: "playing"}));
       this.icon = "player:pause";
     }
 
     _ended() {
       this._resetProperties();
       this.ended = true;
-//      this.fire("skeleton-player-state-change", "ended");
+      this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {detail: "ended"}));
       this.icon = "player:replay";
-
     }
 
     _progress() {
@@ -208,14 +207,13 @@
       this._resetProperties();
       this.paused = true;
       this.icon = "player:play-arrow";
-//        this.fire("skeleton-player-state-change", "paused");
+      this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {detail: "paused"}));
     }
 
     changeProgress() {
       let position = this.immediateValue / 100;
       const player = this.shadowRoot.querySelector("#player");
       player.currentTime = this.duration * position;
-//        if (!this.playing) this.fire('play');
       this._resetEventsBeforeNewTime();
     }
 
@@ -254,7 +252,8 @@
       for (let event in events) {
         if (!events[event]["fired"] && time >= events[event]["time"]) {
           this.finalEvents[event]["fired"] = true;
-//            this.fire("skeleton-player-event", events[event]['event']);
+          const finalEvent = events[event]['event'];
+          this.dispatchEvent(new CustomEvent('skeleton-player-event', {detail: finalEvent}));
         }
       }
     }
