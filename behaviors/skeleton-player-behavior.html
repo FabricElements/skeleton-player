@@ -23,6 +23,11 @@
           type: String,
           value: null
         },
+        play: {
+          type: Boolean,
+          value: false,
+          observer: "_playObserver"
+        },
         autoplay: {
           type: Boolean,
           value: false
@@ -121,6 +126,12 @@
           value: 0
         }
       };
+    }
+
+    _playObserver(newValue, oldValue) {
+      if (oldValue === newValue) return;
+      if (newValue) return this.play();
+      return this.pause();
     }
 
     _actionListeners() {
