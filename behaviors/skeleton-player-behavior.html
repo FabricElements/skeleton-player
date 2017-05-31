@@ -23,10 +23,10 @@
           type: String,
           value: null
         },
-        play: {
+        playSwitch: {
           type: Boolean,
           value: false,
-          observer: "_playObserver"
+          observer: "_playSwitchObserver"
         },
         autoplay: {
           type: Boolean,
@@ -128,7 +128,7 @@
       };
     }
 
-    _playObserver(newValue, oldValue) {
+    _playSwitchObserver(newValue, oldValue) {
       if (oldValue === newValue) return;
       if (newValue) return this.play();
       return this.pause();
