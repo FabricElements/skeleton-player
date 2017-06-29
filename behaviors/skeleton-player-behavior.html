@@ -148,7 +148,7 @@
       const player = this.shadowRoot.querySelector("#player");
       if (!player) return;
       player.addEventListener('loadedmetadata', e => this._loadedMetadata(e));
-      player.addEventListener('play', e => this._playing(e));
+      player.addEventListener('play', e => this._playEvent(e));
       player.addEventListener('playing', e => this._playing(e));
       player.addEventListener('pause', e => this._paused(e));
       player.addEventListener('timeupdate', e => this._progress(e));
@@ -192,6 +192,14 @@
 
     pause() {
       this.shadowRoot.querySelector("#player").pause();
+    }
+
+    _playEvent() {
+      this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {
+        detail: "play",
+        bubbles: true,
+        composed: true
+      }));
     }
 
     _playing() {
