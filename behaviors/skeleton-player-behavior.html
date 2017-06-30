@@ -134,6 +134,11 @@
         firstPlayAction: {
           type: Boolean,
           value: false
+        },
+        jump: {
+          type: Number,
+          value: 0,
+          observer: "_jumpObserver"
         }
       };
     }
@@ -240,6 +245,12 @@
       this.timeTotal = player.duration;
       this.timeCurrent = player.currentTime;
       this._checkTimeEvents(player.currentTime);
+    }
+
+    _jumpObserver(time) {
+      if (time < 0 || !time) return;
+      const player = this.shadowRoot.querySelector("#player");
+      player.currentTime = time;
     }
 
     _progressObserver(progress) {
