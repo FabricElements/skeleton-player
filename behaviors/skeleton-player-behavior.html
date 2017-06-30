@@ -96,6 +96,12 @@
         progress: {
           type: Number,
           value: 0,
+          reflectToAttribute: true,
+          observer: "_progressObserver"
+        },
+        progressInt: {
+          type: Number,
+          value: 0,
           reflectToAttribute: true
         },
         secondaryProgress: {
@@ -234,6 +240,10 @@
       this.timeTotal = player.duration;
       this.timeCurrent = player.currentTime;
       this._checkTimeEvents(player.currentTime);
+    }
+
+    _progressObserver(progress) {
+      this.progressInt = Math.floor(progress);
     }
 
     _paused() {
