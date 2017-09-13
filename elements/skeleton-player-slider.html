@@ -194,135 +194,143 @@ Custom property | Description | Default
   </template>
 
   <script>
-    Polymer({
-      is: 'skeleton-player-slider',
-
-      behaviors: [
+    class SkeletonPlayerSlider extends Polymer.mixinBehaviors([
         Polymer.IronA11yKeysBehavior,
         Polymer.IronFormElementBehavior,
         Polymer.PaperInkyFocusBehavior,
         Polymer.IronRangeBehavior
-      ],
+      ], Polymer.Element) {
 
-      properties: {
+      static get is() {
+        return 'skeleton-player-slider';
+      }
 
-        /**
-         * The number that represents the current secondary progress.
-         */
-        secondaryProgress: {
-          type: Number,
-          value: 0,
-          notify: true,
-          observer: '_secondaryProgressChanged'
-        },
+      static get properties() {
+        return {
 
-        /**
-         * The immediate value of the slider.  This value is updated while the user
-         * is dragging the slider.
-         */
-        immediateValue: {
-          type: Number,
-          value: 0,
-          readOnly: true,
-          notify: true
-        },
+          /**
+            * The number that represents the current secondary progress.
+            */
+          secondaryProgress: {
+            type: Number,
+            value: 0,
+            notify: true,
+            observer: '_secondaryProgressChanged'
+          },
 
-        /**
-         * If true, the knob is expanded
-         */
-        expand: {
-          type: Boolean,
-          value: false,
-          readOnly: true
-        },
+          /**
+            * The immediate value of the slider.  This value is updated while the user
+            * is dragging the slider.
+            */
+          immediateValue: {
+            type: Number,
+            value: 0,
+            readOnly: true,
+            notify: true
+          },
 
-        /**
-         * True when the user is dragging the slider.
-         */
-        dragging: {
-          type: Boolean,
-          value: false,
-          readOnly: true
-        },
+          /**
+            * If true, the knob is expanded
+            */
+          expand: {
+            type: Boolean,
+            value: false,
+            readOnly: true
+          },
 
-        transiting: {
-          type: Boolean,
-          value: false,
-          readOnly: true
-        },
+          /**
+            * True when the user is dragging the slider.
+            */
+          dragging: {
+            type: Boolean,
+            value: false,
+            readOnly: true
+          },
 
-        disabled: {
-          type: Boolean,
-          value: false,
+          transiting: {
+            type: Boolean,
+            value: false,
+            readOnly: true
+          },
+
+          disabled: {
+            type: Boolean,
+            value: false,
+          }
         }
-      },
+      }
 
-      observers: [
-        '_updateKnob(value, min, max, step)',
-        '_valueChanged(value)',
-        '_immediateValueChanged(immediateValue)'
-      ],
+      static get observers() {
+        return [
+          '_updateKnob(value, min, max, step)',
+          '_valueChanged(value)',
+          '_immediateValueChanged(immediateValue)'
+        ]
+      }
 
-      hostAttributes: {
-        role: 'slider',
-        tabindex: 0
-      },
+      connectedCallback() {
+        super.connectedCallback();
+        this._ensureAttribute('tabindex', 0);
+        this._ensureAttribute('role', 'slider');
+      }
 
-      keyBindings: {
-        'left down pagedown home': '_decrementKey',
-        'right up pageup end': '_incrementKey'
-      },
+      get keyBindings() {
+        return {
+          'left down pagedown home': '_decrementKey',
+          'right up pageup end': '_incrementKey'
+        }
+      }
 
       /**
        * Increases value by `step` but not above `max`.
        * @method increment
        */
-      increment: function () {
+      increment () {
         this.value = this._clampValue(this.value + this.step);
-      },
+      }
 
       /**
        * Decreases value by `step` but not below `min`.
        * @method decrement
        */
-      decrement: function () {
+      decrement () {
         this.value = this._clampValue(this.value - this.step);
-      },
+      }
 
-      _updateKnob: function (value, min, max, step) {
+      _updateKnob (value, min, max, step) {
         this.setAttribute('aria-valuemin', min);
         this.setAttribute('aria-valuemax', max);
         this.setAttribute('aria-valuenow', value);
 
         this._positionKnob(this._calcRatio(value));
-      },
+      }
 
-      _valueChanged: function () {
+      _valueChanged () {
         this.fire('value-change');
-      },
+      }
 
-      _immediateValueChanged: function () {
+      _immediateValueChanged () {
         if (this.dragging) {
           this.fire('immediate-value-change');
         } else {
           this.value = this.immediateValue;
         }
-      },
+      }
 
-      _secondaryProgressChanged: function () {
+      _secondaryProgressChanged () {
         this.secondaryProgress = this._clampValue(this.secondaryProgress);
-      },
+      }
 
-      _expandKnob: function () {
+      _expandKnob () {
         this._setExpand(true);
-      },
+      }
 
-      _resetKnob: function () {
+      _resetKnob () {
         this.cancelDebouncer('expandKnob');
         this._setExpand(false);
-      },
+      }
 
-      _positionKnob: function (ratio) {
+      _positionKnob (ratio) {
         this._setImmediateValue(this._calcStep(this._calcKnobPosition(ratio)));
         this._setRatio(this._calcRatio(this.immediateValue));
 
@@ -331,13 +339,13 @@ Custom property | Description | Default
           this._knobstartx = this.ratio * this._w;
           this.translate3d(0, 0, 0, this.$.sliderKnob);
         }
-      },
+      }
 
-      _calcKnobPosition: function (ratio) {
+      _calcKnobPosition (ratio) {
         return (this.max - this.min) * ratio + this.min;
-      },
+      }
 
-      _onTrack: function (event) {
+      _onTrack (event) {
         event.stopPropagation();
         switch (event.detail.state) {
           case 'start':
@@ -350,9 +358,9 @@ Custom property | Description | Default
             this._trackEnd();
             break;
         }
-      },
+      }
 
-      _trackStart: function (event) {
+      _trackStart (event) {
         this._w = this.$.sliderBar.offsetWidth;
         this._x = this.ratio * this._w;
         this._startx = this._x;
@@ -361,9 +369,9 @@ Custom property | Description | Default
         this._maxx = this._w - this._startx;
         this.$.sliderKnob.classList.add('dragging');
         this._setDragging(true);
-      },
+      }
 
-      _trackX: function (event) {
+      _trackX (event) {
         if (!this.dragging) {
           this._trackStart(event);
         }
@@ -377,9 +385,9 @@ Custom property | Description | Default
         // update knob's position
         var translateX = ((this._calcRatio(this.immediateValue) * this._w) - this._knobstartx);
         this.translate3d(translateX + 'px', 0, 0, this.$.sliderKnob);
-      },
+      }
 
-      _trackEnd: function () {
+      _trackEnd () {
         var s = this.$.sliderKnob.style;
 
         this.$.sliderKnob.classList.remove('dragging');
@@ -390,9 +398,9 @@ Custom property | Description | Default
         s.transform = s.webkitTransform = '';
 
         this.fire('change');
-      },
+      }
 
-      _knobdown: function (event) {
+      _knobdown (event) {
         this._expandKnob();
 
         // cancel selection
@@ -400,9 +408,9 @@ Custom property | Description | Default
 
         // set the focus manually because we will called prevent default
         this.focus();
-      },
+      }
 
-      _bardown: function (event) {
+      _bardown (event) {
         this._w = this.$.sliderBar.offsetWidth;
         var rect = this.$.sliderBar.getBoundingClientRect();
         var ratio = (event.detail.x - rect.left) / this._w;
@@ -431,31 +439,31 @@ Custom property | Description | Default
 
         // set the focus manually because we will called prevent default
         this.focus();
-      },
+      }
 
-      _knobTransitionEnd: function (event) {
+      _knobTransitionEnd (event) {
         if (event.target === this.$.sliderKnob) {
           this._setTransiting(false);
         }
-      },
+      }
 
-      _mergeClasses: function (classes) {
+      _mergeClasses (classes) {
         return Object.keys(classes).filter(
           function (className) {
             return classes[className];
           }).join(' ');
-      },
+      }
 
-      _getClassNames: function () {
+      _getClassNames () {
         return this._mergeClasses({
           disabled: this.disabled,
           expand: this.expand,
           dragging: this.dragging,
           transiting: this.transiting
         });
-      },
+      }
 
-      _incrementKey: function (event) {
+      _incrementKey (event) {
         if (!this.disabled) {
           if (event.detail.key === 'end') {
             this.value = this.max;
@@ -465,9 +473,9 @@ Custom property | Description | Default
           this.fire('change');
           event.preventDefault();
         }
-      },
+      }
 
-      _decrementKey: function (event) {
+      _decrementKey (event) {
         if (!this.disabled) {
           if (event.detail.key === 'home') {
             this.value = this.min;
@@ -477,27 +485,27 @@ Custom property | Description | Default
           this.fire('change');
           event.preventDefault();
         }
-      },
+      }
 
-      _changeValue: function (event) {
+      _changeValue (event) {
         this.value = event.target.value;
         this.fire('change');
-      },
+      }
 
-      _inputKeyDown: function (event) {
+      _inputKeyDown (event) {
         event.stopPropagation();
-      },
+      }
 
       // create the element ripple inside the `sliderKnob`
-      _createRipple: function () {
+      _createRipple () {
         this._rippleContainer = this.$.sliderKnob;
         return Polymer.PaperInkyFocusBehaviorImpl._createRipple.call(this);
-      },
+      }
 
       // Hide the ripple when user is not interacting with keyboard.
       // This behavior is different from other ripple-y controls, but is
       // according to spec: https://www.google.com/design/spec/components/sliders.html
-      _focusedChanged: function (receivedFocusFromKeyboard) {
+      _focusedChanged (receivedFocusFromKeyboard) {
         if (receivedFocusFromKeyboard) {
           this.ensureRipple();
         }
@@ -511,7 +519,7 @@ Custom property | Description | Default
           this._ripple.holdDown = receivedFocusFromKeyboard;
         }
       }
-    });
+    };
 
     /**
      * Fired when the slider's value changes.
@@ -538,5 +546,6 @@ Custom property | Description | Default
      *
      * @event change
      */
+     window.customElements.define(SkeletonPlayerSlider.is, SkeletonPlayerSlider);
   </script>
 </dom-module>
