@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="behaviors/skeleton-player-behavior.html">
+<link rel="import" href="mixins/skeleton-player-mixin.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="elements/skeleton-player-slider.html">
@@ -47,7 +47,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    class SkeletonAudio extends SkeletonPlayerBehavior(Polymer.Element) {
+    class SkeletonAudio extends SkeletonPlayerMixin(Polymer.Element) {
       static get is() {
         return 'skeleton-audio';
       }
