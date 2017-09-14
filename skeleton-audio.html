@@ -1,9 +1,9 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="mixins/skeleton-player-mixin.html">
+<link rel="import" href="./mixins/skeleton-player-mixin.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="elements/skeleton-player-slider.html">
-<link rel="import" href="icons.html">
+<link rel="import" href="./elements/skeleton-player-slider.html">
+<link rel="import" href="./icons.html">
 
 <dom-module id="skeleton-audio">
   <template>
@@ -31,7 +31,7 @@
     <paper-icon-button id="action" disabled$="[[!loaded]]"></paper-icon-button>
 
     <skeleton-player-slider id="slider"
-                            value="[[progress]]"
+                            value$="[[progress]]"
                             secondary-progress="[[secondaryProgress]]"
                             immediate-value="{{immediateValue}}"
                             disabled$="[[disabled]]"
@@ -45,11 +45,29 @@
      *
      * @customElement
      * @polymer
+     * @appliesMixin Fabric.skeletonPlayerMixin
      * @demo demo/index.html
      */
-    class SkeletonAudio extends SkeletonPlayerMixin(Polymer.Element) {
+    class SkeletonAudio extends Fabric.skeletonPlayerMixin(Polymer.Element) {
+      /**
+       * @return {string}
+       */
       static get is() {
         return 'skeleton-audio';
+      }
+
+      /**
+       * @return {object}
+       */
+      static get properties() {
+        return {};
+      }
+
+      /**
+       * Constructor
+       */
+      constructor() {
+        super();
       }
     }
 
