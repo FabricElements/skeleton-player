@@ -1,26 +1,21 @@
 <script>
+  window.Fabric = window.Fabric || {};
+
   /**
    * Fabric.skeletonPlayerMixin
    *
-   * @polymerMixin
+   * @polymerMixin Fabric.skeletonPlayerMixin
+   * @mixinFunction
    * @override
    * @memberOf Fabric
    * @constructor
+   * @param {HTMLElement} superclass
+   * @return {*}
    */
-  const skeletonPlayerMixin = (superclass) => class extends superclass {
-    constructor() {
-      super();
-    }
-
-    connectedCallback() {
-      super.connectedCallback();
-
-      this._actionListeners();
-      this._playerListeners();
-      // Listen for change event on the slider
-      this.addEventListener('change', (e) => this.changeProgress(e));
-    }
-
+  Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
+    /**
+     * @return {object}
+     */
     static get properties() {
       return {
         type: {
@@ -151,18 +146,55 @@
       };
     }
 
+    /**
+     * Constructor
+     */
+    constructor() {
+      super();
+    }
+
+    /**
+     * connectedCallback
+     */
+    connectedCallback() {
+      super.connectedCallback();
+
+      this._actionListeners();
+      this._playerListeners();
+      // Listen for change event on the slider
+      this.addEventListener('change', (e) => this.changeProgress(e));
+    }
+
+    /**
+     * Switch Observer
+     *
+     * @param {boolean} newValue
+     * @param {boolean} oldValue
+     * @return {*}
+     * @private
+     */
     _playSwitchObserver(newValue, oldValue) {
       if (newValue === oldValue || !this.firstPlayAction) return;
       if (newValue) return this.play();
       return this.pause();
     }
 
+    /**
+     * Action listeners
+     *
+     * @private
+     */
     _actionListeners() {
       const action = this.shadowRoot.querySelector('#action');
       if (!action) return;
       action.addEventListener('tap', (e) => this.togglePlay(e));
     }
 
+    /**
+     * Player Listeners
+     *
+     * @private
+     */
     _playerListeners() {
       const player = this.shadowRoot.querySelector('#player');
       if (!player) return;
@@ -175,6 +207,11 @@
       player.addEventListener('ended', (e) => this._ended(e));
     }
 
+    /**
+     * Reset properties
+     *
+     * @private
+     */
     _resetProperties() {
       this.disabled = false;
       this.error = false;
@@ -183,6 +220,11 @@
       this.playing = false;
     }
 
+    /**
+     * Called when the media metadata is available
+     *
+     * @private
+     */
     _loadedMetadata() {
       this.loaded = true;
       const player = this.shadowRoot.querySelector('#player');
@@ -193,25 +235,46 @@
       this.icon = 'player:play-arrow';
     }
 
+    /**
+     * Handle player errors
+     *
+     * @private
+     */
     _error() {
       this._resetProperties();
       this.error = true;
       this.disabled = true;
     }
 
+    /**
+     * Toggle player. Use boolean to play or pause media.
+     *
+     * @return {*}
+     */
     togglePlay() {
       if (this.playing) return this.pause();
       this.play();
     }
 
+    /**
+     * Play media
+     */
     play() {
       this.shadowRoot.querySelector('#player').play();
     }
 
+    /**
+     * Pause media
+     */
     pause() {
       this.shadowRoot.querySelector('#player').pause();
     }
 
+    /**
+     * Called when the play event is called
+     *
+     * @private
+     */
     _playEvent() {
       this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {
         detail: 'play',
@@ -220,6 +283,11 @@
       }));
     }
 
+    /**
+     * Called when media is playing
+     *
+     * @private
+     */
     _playing() {
       this._resetProperties();
       const player = this.shadowRoot.querySelector('#player');
@@ -234,6 +302,11 @@
       this.firstPlayAction = true;
     }
 
+    /**
+     * Called when the media ends and then fire an event
+     *
+     * @private
+     */
     _ended() {
       this._resetProperties();
       this.ended = true;
@@ -245,6 +318,11 @@
       this.icon = 'player:replay';
     }
 
+    /**
+     * Get player progress
+     *
+     * @private
+     */
     _progress() {
       const player = this.shadowRoot.querySelector('#player');
       this.progress = (player.currentTime / player.duration) * 100;
@@ -254,16 +332,33 @@
       this._checkTimeEvents(player.currentTime);
     }
 
+    /**
+     * Jump observer
+     *
+     * @param {number} time
+     * @private
+     */
     _jumpObserver(time) {
       if (time < 0 || !time) return;
       const player = this.shadowRoot.querySelector('#player');
       player.currentTime = time;
     }
 
+    /**
+     * Progress observer
+     *
+     * @param {number} progress
+     * @private
+     */
     _progressObserver(progress) {
       this.progressInt = Math.floor(progress);
     }
 
+    /**
+     * Pause player
+     *
+     * @private
+     */
     _paused() {
       this._resetProperties();
       this.paused = true;
@@ -275,6 +370,9 @@
       }));
     }
 
+    /**
+     * Change progress value
+     */
     changeProgress() {
       let position = this.immediateValue / 100;
       const player = this.shadowRoot.querySelector('#player');
@@ -282,6 +380,11 @@
       this._resetEventsBeforeNewTime();
     }
 
+    /**
+     * Reset events before new time
+     *
+     * @private
+     */
     _resetEventsBeforeNewTime() {
       const player = this.shadowRoot.querySelector('#player');
       let time = player.currentTime;
@@ -296,6 +399,12 @@
       }
     }
 
+    /**
+     * Event observer
+     *
+     * @param {object} events
+     * @private
+     */
     _eventsObserver(events) {
       if (!events) return;
       let baseEvents = [];
@@ -311,6 +420,12 @@
       if (baseEvents[0]) this.finalEvents = baseEvents;
     }
 
+    /**
+     * Check time events and fire event
+     *
+     * @param {number} time
+     * @private
+     */
     _checkTimeEvents(time) {
       if (!this.finalEvents) return;
       time = Math.floor(time);
@@ -329,12 +444,25 @@
       }
     }
 
+    /**
+     * Icon Observer
+     *
+     * @param {string} icon
+     * @private
+     */
     _iconObserver(icon) {
       const action = this.shadowRoot.querySelector('#action');
       if (!action) return;
       action.icon = icon;
     }
 
+    /**
+     * Seconds to minutes
+     *
+     * @param {number} seconds
+     * @return {*}
+     * @private
+     */
     _secToMin(seconds) {
       if (seconds === 0) return '';
       let minutes = Math.floor(seconds / 60);
@@ -344,6 +472,4 @@
       );
     }
   };
-  window.Fabric = window.Fabric || {};
-  window.Fabric.skeletonPlayerMixin = skeletonPlayerMixin;
 </script>

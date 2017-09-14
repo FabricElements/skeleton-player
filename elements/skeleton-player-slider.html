@@ -194,6 +194,8 @@ Custom property | Description | Default
   </template>
 
   <script>
+    /* eslint-disable require-jsdoc,space-before-function-paren */
+
     /**
      * `skeleton-player-slider`
      *
@@ -202,11 +204,11 @@ Custom property | Description | Default
      * @demo demo/index.html
      */
     class SkeletonPlayerSlider extends Polymer.mixinBehaviors([
-        Polymer.IronA11yKeysBehavior,
-        Polymer.IronFormElementBehavior,
-        Polymer.PaperInkyFocusBehavior,
-        Polymer.IronRangeBehavior,
-      ], Polymer.Element) {
+      Polymer.IronA11yKeysBehavior,
+      Polymer.IronFormElementBehavior,
+      Polymer.PaperInkyFocusBehavior,
+      Polymer.IronRangeBehavior,
+    ], Polymer.Element) {
       static get is() {
         return 'skeleton-player-slider';
       }
@@ -215,8 +217,8 @@ Custom property | Description | Default
         return {
 
           /**
-            * The number that represents the current secondary progress.
-            */
+           * The number that represents the current secondary progress.
+           */
           secondaryProgress: {
             type: Number,
             value: 0,
@@ -225,10 +227,10 @@ Custom property | Description | Default
           },
 
           /**
-            * The immediate value of the slider. 
-            * This value is updated while the user
-            * is dragging the slider.
-            */
+           * The immediate value of the slider.
+           * This value is updated while the user
+           * is dragging the slider.
+           */
           immediateValue: {
             type: Number,
             value: 0,
@@ -237,8 +239,8 @@ Custom property | Description | Default
           },
 
           /**
-            * If true, the knob is expanded
-            */
+           * If true, the knob is expanded
+           */
           expand: {
             type: Boolean,
             value: false,
@@ -246,8 +248,8 @@ Custom property | Description | Default
           },
 
           /**
-            * True when the user is dragging the slider.
-            */
+           * True when the user is dragging the slider.
+           */
           dragging: {
             type: Boolean,
             value: false,
@@ -456,7 +458,7 @@ Custom property | Description | Default
           this._setTransiting(false);
         }
 
-        this.async( () => {
+        this.async(() => {
           this.fire('change');
         });
 
@@ -475,7 +477,7 @@ Custom property | Description | Default
 
       _mergeClasses(classes) {
         return Object.keys(classes).filter(
-          function(className) {
+          function (className) {
             return classes[className];
           }).join(' ');
       }
@@ -572,6 +574,6 @@ Custom property | Description | Default
      *
      * @event change
      */
-     window.customElements.define(SkeletonPlayerSlider.is, SkeletonPlayerSlider);
+    window.customElements.define(SkeletonPlayerSlider.is, SkeletonPlayerSlider);
   </script>
 </dom-module>
