@@ -1,5 +1,13 @@
 <script>
-  const SkeletonPlayerMixin = superclass => class extends superclass {
+  /**
+   * Fabric.skeletonPlayerMixin
+   *
+   * @polymerMixin
+   * @override
+   * @memberOf Fabric
+   * @constructor
+   */
+  const skeletonPlayerMixin = (superclass) => class extends superclass {
     constructor() {
       super();
     }
@@ -10,136 +18,136 @@
       this._actionListeners();
       this._playerListeners();
       // Listen for change event on the slider
-      this.addEventListener('change', e => this.changeProgress(e));
+      this.addEventListener('change', (e) => this.changeProgress(e));
     }
 
     static get properties() {
       return {
         type: {
           type: String,
-          value: null
+          value: null,
         },
         src: {
           type: String,
-          value: null
+          value: null,
         },
         playSwitch: {
           type: Boolean,
           value: false,
-          observer: "_playSwitchObserver"
+          observer: '_playSwitchObserver',
         },
         autoplay: {
           type: Boolean,
-          value: false
+          value: false,
         },
         controls: {
           type: Boolean,
-          value: false
+          value: false,
         },
         preload: {
           type: String,
-          value: "metadata"
+          value: 'metadata',
         },
         loop: {
           type: Boolean,
-          value: false
+          value: false,
         },
         muted: {
           type: Boolean,
-          value: false
+          value: false,
         },
         playing: {
           type: Boolean,
-          value: false
+          value: false,
         },
         paused: {
           type: Boolean,
-          value: false
+          value: false,
         },
         ended: {
           type: Boolean,
-          value: false
+          value: false,
         },
         timeOffset: {
           type: Number,
-          value: 0
+          value: 0,
         },
         percentagePlayed: {
           type: Number,
-          value: 0
+          value: 0,
         },
         duration: {
           type: Number,
-          value: 0
+          value: 0,
         },
         disabled: {
           type: Boolean,
-          value: false
+          value: false,
         },
         error: {
           type: Boolean,
-          value: false
+          value: false,
         },
         events: {
           type: Array,
           value: null,
-          observer: "_eventsObserver",
+          observer: '_eventsObserver',
         },
         finalEvents: {
           type: Object,
-          value: null
+          value: null,
         },
         loaded: {
           type: Boolean,
-          value: false
+          value: false,
         },
         progress: {
           type: Number,
           value: 0,
           reflectToAttribute: true,
-          observer: "_progressObserver"
+          observer: '_progressObserver',
         },
         progressInt: {
           type: Number,
           value: 0,
-          reflectToAttribute: true
+          reflectToAttribute: true,
         },
         secondaryProgress: {
           type: Number,
           value: 0,
-          reflectToAttribute: true
+          reflectToAttribute: true,
         },
         immediateValue: {
           type: Number,
           value: 0,
-          reflectToAttribute: true
+          reflectToAttribute: true,
         },
         icon: {
           type: String,
-          value: "player:loop",
-          observer: "_iconObserver"
+          value: 'player:loop',
+          observer: '_iconObserver',
         },
         timeTotal: {
           type: Number,
-          value: 0
+          value: 0,
         },
         timeLeft: {
           type: Number,
-          value: 0
+          value: 0,
         },
         timeCurrent: {
           type: Number,
-          value: 0
+          value: 0,
         },
         firstPlayAction: {
           type: Boolean,
-          value: false
+          value: false,
         },
         jump: {
           type: Number,
           value: 0,
-          observer: "_jumpObserver"
-        }
+          observer: '_jumpObserver',
+        },
       };
     }
 
@@ -150,21 +158,21 @@
     }
 
     _actionListeners() {
-      const action = this.shadowRoot.querySelector("#action");
+      const action = this.shadowRoot.querySelector('#action');
       if (!action) return;
-      action.addEventListener('tap', e => this.togglePlay(e));
+      action.addEventListener('tap', (e) => this.togglePlay(e));
     }
 
     _playerListeners() {
-      const player = this.shadowRoot.querySelector("#player");
+      const player = this.shadowRoot.querySelector('#player');
       if (!player) return;
-      player.addEventListener('loadedmetadata', e => this._loadedMetadata(e));
-      player.addEventListener('play', e => this._playEvent(e));
-      player.addEventListener('playing', e => this._playing(e));
-      player.addEventListener('pause', e => this._paused(e));
-      player.addEventListener('timeupdate', e => this._progress(e));
-      player.addEventListener('error', e => this._error(e));
-      player.addEventListener('ended', e => this._ended(e));
+      player.addEventListener('loadedmetadata', (e) => this._loadedMetadata(e));
+      player.addEventListener('play', (e) => this._playEvent(e));
+      player.addEventListener('playing', (e) => this._playing(e));
+      player.addEventListener('pause', (e) => this._paused(e));
+      player.addEventListener('timeupdate', (e) => this._progress(e));
+      player.addEventListener('error', (e) => this._error(e));
+      player.addEventListener('ended', (e) => this._ended(e));
     }
 
     _resetProperties() {
@@ -177,12 +185,12 @@
 
     _loadedMetadata() {
       this.loaded = true;
-      const player = this.shadowRoot.querySelector("#player");
+      const player = this.shadowRoot.querySelector('#player');
       this.duration = player.duration;
       this.timeLeft = player.duration;
       this.timeTotal = player.duration;
 
-      this.icon = "player:play-arrow";
+      this.icon = 'player:play-arrow';
     }
 
     _error() {
@@ -192,38 +200,37 @@
     }
 
     togglePlay() {
-      const player = this.shadowRoot.querySelector("#player");
       if (this.playing) return this.pause();
       this.play();
     }
 
     play() {
-      this.shadowRoot.querySelector("#player").play();
+      this.shadowRoot.querySelector('#player').play();
     }
 
     pause() {
-      this.shadowRoot.querySelector("#player").pause();
+      this.shadowRoot.querySelector('#player').pause();
     }
 
     _playEvent() {
       this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {
-        detail: "play",
+        detail: 'play',
         bubbles: true,
-        composed: true
+        composed: true,
       }));
     }
 
     _playing() {
       this._resetProperties();
-      const player = this.shadowRoot.querySelector("#player");
+      const player = this.shadowRoot.querySelector('#player');
       this.played = player.played;
       this.playing = true;
       this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {
-        detail: "playing",
+        detail: 'playing',
         bubbles: true,
-        composed: true
+        composed: true,
       }));
-      this.icon = "player:pause";
+      this.icon = 'player:pause';
       this.firstPlayAction = true;
     }
 
@@ -231,15 +238,15 @@
       this._resetProperties();
       this.ended = true;
       this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {
-        detail: "ended",
+        detail: 'ended',
         bubbles: true,
-        composed: true
+        composed: true,
       }));
-      this.icon = "player:replay";
+      this.icon = 'player:replay';
     }
 
     _progress() {
-      const player = this.shadowRoot.querySelector("#player");
+      const player = this.shadowRoot.querySelector('#player');
       this.progress = (player.currentTime / player.duration) * 100;
       this.timeLeft = player.duration - player.currentTime;
       this.timeTotal = player.duration;
@@ -249,7 +256,7 @@
 
     _jumpObserver(time) {
       if (time < 0 || !time) return;
-      const player = this.shadowRoot.querySelector("#player");
+      const player = this.shadowRoot.querySelector('#player');
       player.currentTime = time;
     }
 
@@ -260,30 +267,32 @@
     _paused() {
       this._resetProperties();
       this.paused = true;
-      this.icon = "player:play-arrow";
+      this.icon = 'player:play-arrow';
       this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {
-        detail: "paused",
+        detail: 'paused',
         bubbles: true,
-        composed: true
+        composed: true,
       }));
     }
 
     changeProgress() {
       let position = this.immediateValue / 100;
-      const player = this.shadowRoot.querySelector("#player");
+      const player = this.shadowRoot.querySelector('#player');
       player.currentTime = this.duration * position;
       this._resetEventsBeforeNewTime();
     }
 
     _resetEventsBeforeNewTime() {
-      const player = this.shadowRoot.querySelector("#player");
+      const player = this.shadowRoot.querySelector('#player');
       let time = player.currentTime;
       time = Math.floor(time);
 
       if (!this.finalEvents) return;
       for (let event in this.finalEvents) {
         if (!event) return;
-        if (this.finalEvents[event].time >= time) this.finalEvents[event]["fired"] = false;
+        if (this.finalEvents[event].time >= time) {
+          this.finalEvents[event]['fired'] = false;
+        }
       }
     }
 
@@ -295,7 +304,7 @@
         let eventBase = {
           event: events[event],
           time: event,
-          fired: false
+          fired: false,
         };
         baseEvents.push(eventBase);
       }
@@ -308,30 +317,33 @@
       const events = this.finalEvents;
 
       for (let event in events) {
-        if (!events[event]["fired"] && time >= events[event]["time"]) {
-          this.finalEvents[event]["fired"] = true;
+        if (!events[event]['fired'] && time >= events[event]['time']) {
+          this.finalEvents[event]['fired'] = true;
           const finalEvent = events[event]['event'];
           this.dispatchEvent(new CustomEvent('skeleton-player-event', {
             detail: finalEvent,
             bubbles: true,
-            composed: true
+            composed: true,
           }));
         }
       }
     }
 
     _iconObserver(icon) {
-      const action = this.shadowRoot.querySelector("#action");
+      const action = this.shadowRoot.querySelector('#action');
       if (!action) return;
       action.icon = icon;
     }
 
     _secToMin(seconds) {
       if (seconds === 0) return '';
-      var minutes = Math.floor(seconds / 60);
-      var secondsToCalc = Math.floor(seconds % 60) + '';
-      return minutes + ':' + (secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc);
+      let minutes = Math.floor(seconds / 60);
+      let secondsToCalc = Math.floor(seconds % 60) + '';
+      return minutes + ':' + (
+        secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc
+      );
     }
-
   };
+  window.Fabric = window.Fabric || {};
+  window.Fabric.skeletonPlayerMixin = skeletonPlayerMixin;
 </script>

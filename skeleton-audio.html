@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="mixins/skeleton-player-mixin.html">
+<link rel="import" href="./mixins/skeleton-player-mixin.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="elements/skeleton-player-slider.html">
@@ -31,7 +31,7 @@
     <paper-icon-button id="action" disabled$="[[!loaded]]"></paper-icon-button>
 
     <skeleton-player-slider id="slider"
-                            value="[[progress]]"
+                            value$="[[progress]]"
                             secondary-progress="[[secondaryProgress]]"
                             immediate-value="{{immediateValue}}"
                             disabled$="[[disabled]]"
@@ -47,9 +47,65 @@
      * @polymer
      * @demo demo/index.html
      */
-    class SkeletonAudio extends SkeletonPlayerMixin(Polymer.Element) {
+    class SkeletonAudio extends skeletonPlayerMixin(Polymer.Element) {
       static get is() {
         return 'skeleton-audio';
+      }
+
+      static get properties() {
+        return {
+          type: {
+            type: String,
+            value: null,
+          },
+          src: {
+            type: String,
+            value: null,
+          },
+          autoplay: {
+            type: Boolean,
+            value: false,
+          },
+          preload: {
+            type: String,
+            value: 'metadata',
+          },
+          loop: {
+            type: Boolean,
+            value: false,
+          },
+          muted: {
+            type: Boolean,
+            value: false,
+          },
+          disabled: {
+            type: Boolean,
+            value: false,
+          },
+          loaded: {
+            type: Boolean,
+            value: false,
+          },
+          progress: {
+            type: Number,
+            value: 0,
+            reflectToAttribute: true,
+          },
+          secondaryProgress: {
+            type: Number,
+            value: 0,
+            reflectToAttribute: true,
+          },
+          immediateValue: {
+            type: Number,
+            value: 0,
+            reflectToAttribute: true,
+          },
+        };
+      }
+
+      constructor() {
+        super();
       }
     }
 
