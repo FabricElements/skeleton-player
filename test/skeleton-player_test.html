@@ -8,23 +8,51 @@
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
   <link rel="import" href="../skeleton-player.html">
 </head>
 <body>
-<test-fixture id="basic">
+<test-fixture id="basicPlayer">
   <template>
-    <!--<skeleton-player></skeleton-player>-->
+      <skeleton-audio src="http://nadikun.com/audio/pink-shades-o-pnr.mp3"
+                      controls
+                      preload
+      ></skeleton-audio>
   </template>
 </test-fixture>
 
 <script>
-//  suite('skeleton-player', function () {
-//    test('instantiating the element works', function () {
-//      var element = fixture('basic');
-//      assert.equal(element.is, 'skeleton-player');
-//    });
-//  });
+  suite('Controls actions', () => {
+    let element;
+    let button;
+
+    setup(() => {
+      element = fixture('basicPlayer');
+      button = element.shadowRoot.querySelector('#action');
+    });
+
+    test('Should play and pause when clicking the action button', (done) => {
+      // Wait until event listeners of skeleton-audio are in place
+      window.setTimeout(() => {
+        // Click "play"
+        MockInteractions.tap(button);
+        // Wait a tick
+        window.setTimeout(() => {
+          // Should be playing
+          expect(element.playing).to.be.true;
+          // Click again, on what should be "pause" now
+          MockInteractions.tap(button);
+          // Wait a tick
+          window.setTimeout(() => {
+            // Should be paused
+            expect(element.playing).to.be.false;
+            done();
+          });
+        });
+      }, 100);
+    });
+  });
 </script>
 </body>
 </html>
