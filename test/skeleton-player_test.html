@@ -15,15 +15,24 @@
 <body>
 <test-fixture id="basicPlayer">
   <template>
-      <skeleton-audio src="http://nadikun.com/audio/pink-shades-o-pnr.mp3"
+      <skeleton-audio src="https://www.soundjay.com/button/sounds/button-2.mp3"
                       controls
                       preload
       ></skeleton-audio>
   </template>
 </test-fixture>
+<test-fixture id="replayPlayer">
+  <template>
+      <skeleton-audio src="https://www.soundjay.com/button/sounds/button-2.mp3"
+                      controls
+                      preload
+                      autoplay
+      ></skeleton-audio>
+  </template>
+</test-fixture>
 
 <script>
-  suite('Controls actions', () => {
+  suite('Play and pause actions', () => {
     let element;
     let button;
 
@@ -51,6 +60,38 @@
           });
         });
       }, 100);
+    });
+  });
+
+  suite('Replay actions', () => {
+    let element;
+    let button;
+    let player;
+
+    setup(() => {
+      element = fixture('replayPlayer');
+      button = element.shadowRoot.querySelector('#action');
+      player = element.shadowRoot.querySelector('#player');
+    });
+
+    test('Should autoplay if the attribute is set', (done) => {
+      window.setTimeout(() => {
+        expect(element.autoplay).to.be.true;
+        done();
+      });
+    });
+
+    test('Should replay audio when clicking the action button', (done) => {
+      player.addEventListener('ended', () => {
+        window.setTimeout(() => {
+          MockInteractions.tap(button);
+
+          window.setTimeout(() => {
+            expect(element.playing).to.be.true;
+            done();
+          }, 10);
+        },100);
+      });
     });
   });
 </script>
