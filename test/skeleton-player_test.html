@@ -15,7 +15,7 @@
 <body>
 <test-fixture id="basicPlayer">
   <template>
-      <skeleton-audio src="https://www.soundjay.com/button/sounds/button-2.mp3"
+      <skeleton-audio src="./audio/testing.mp3"
                       controls
                       preload
       ></skeleton-audio>
@@ -23,15 +23,30 @@
 </test-fixture>
 <test-fixture id="replayPlayer">
   <template>
-      <skeleton-audio src="https://www.soundjay.com/button/sounds/button-2.mp3"
+      <skeleton-audio src="./audio/testing.mp3"
                       controls
                       preload
                       autoplay
       ></skeleton-audio>
   </template>
 </test-fixture>
-
+<test-fixture id="keyboardPlayer">
+  <template>
+      <skeleton-audio src="./audio/testing.mp3"
+                      controls
+                      preload
+      ></skeleton-audio>
+  </template>
+</test-fixture>
 <script>
+  const wait = (ms = 0, value = undefined) => {
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve(value);
+      }, ms);
+    });
+  };
+
   suite('Play and pause actions', () => {
     let element;
     let button;
@@ -43,23 +58,27 @@
 
     test('Should play and pause when clicking the action button', (done) => {
       // Wait until event listeners of skeleton-audio are in place
-      window.setTimeout(() => {
-        // Click "play"
-        MockInteractions.tap(button);
-        // Wait a tick
-        window.setTimeout(() => {
+      wait(100)
+        .then(() => {
+          // Click "play"
+          MockInteractions.tap(button);
+          // Wait a tick
+          return wait();
+        })
+        .then(() => {
           // Should be playing
           expect(element.playing).to.be.true;
           // Click again, on what should be "pause" now
           MockInteractions.tap(button);
           // Wait a tick
-          window.setTimeout(() => {
-            // Should be paused
-            expect(element.playing).to.be.false;
-            done();
-          });
-        });
-      }, 100);
+          return wait();
+        })
+        .then(() => {
+          // Should be paused
+          expect(element.playing).to.be.false;
+          done();
+        })
+        .catch(done);
     });
   });
 
@@ -75,23 +94,141 @@
     });
 
     test('Should autoplay if the attribute is set', (done) => {
-      window.setTimeout(() => {
-        expect(element.autoplay).to.be.true;
-        done();
-      });
+      // Wait until event listeners of skeleton-audio are in place
+      wait(100)
+        .then(() => {
+          expect(element.autoplay).to.be.true;
+          done();
+        })
+        .catch(done);
     });
 
     test('Should replay audio when clicking the action button', (done) => {
       player.addEventListener('ended', () => {
-        window.setTimeout(() => {
-          MockInteractions.tap(button);
-
-          window.setTimeout(() => {
+        // Wait until event listeners of skeleton-audio are in place
+        wait(100)
+          .then(() => {
+            MockInteractions.tap(button);
+            // Wait a tick
+            return wait(10);
+          })
+          .then(() => {
             expect(element.playing).to.be.true;
             done();
-          }, 10);
-        },100);
+          })
+          .catch(done);
       });
+    });
+  });
+
+  suite('Keyboard actions', () => {
+    let keyCodes = {
+      'right': 39,
+      'left': 37,
+      'up': 38,
+      'down': 40,
+      'pgUp': 33,
+      'pgDown': 34,
+      'home': 36,
+      'end': 35,
+    };
+    let element;
+    let bar;
+
+    setup(() => {
+      element = fixture('keyboardPlayer');
+      bar = element.shadowRoot.querySelector('skeleton-player-slider');
+    });
+
+    test('Should control back&forward with keybindings', (done) => {
+      // Wait until event listeners of skeleton-audio are in place
+      wait(100)
+        .then(() => {
+          // Catch jump time
+          let thisJump = element.timeCurrent;
+          // Press right arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.right);
+          // Wait a tick
+          return wait(0, thisJump);
+        })
+        .then((previousJump) => {
+          let thisJump = element.timeCurrent;
+          // Should be greater than 0
+          expect(thisJump).to.be.above(previousJump);
+          // Press up arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.up);
+          // Wait a tick
+          return wait(0, thisJump);
+        })
+        .then((previousJump) => {
+          let thisJump = element.timeCurrent;
+          // Should be greater than previous jump
+          expect(thisJump).to.be.above(previousJump);
+          // Press Pg Up arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.pgUp);
+          // Wait a tick
+          return wait(0, thisJump);
+        })
+        .then((previousJump) => {
+          let thisJump = element.timeCurrent;
+          // Should be greater than previous jump
+          expect(thisJump).to.be.above(previousJump);
+          // Press left arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.left);
+          // Wait a tick
+          return wait(0, thisJump);
+        })
+        .then((previousJump) => {
+          let thisJump = element.timeCurrent;
+          // Should be less than previous jump
+          expect(thisJump).to.be.below(previousJump);
+          // Press down arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.down);
+          // Wait a tick
+          return wait(0, thisJump);
+        })
+        .then((previousJump) => {
+          let thisJump = element.timeCurrent;
+          // Should be less than previous jump
+          expect(thisJump).to.be.below(previousJump);
+          // Press Pg Dn arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.pgDown);
+          // Wait a tick
+          return wait(0, thisJump);
+        })
+        .then((previousJump) => {
+          let thisJump = element.timeCurrent;
+          // Should be less than previous jump
+          expect(thisJump).to.be.below(previousJump);
+          done();
+        })
+        .catch(done);
+    });
+
+    test('Should control start and end with keybindings', (done) => {
+      wait(100)
+        .then(() => {
+          // Press end arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.end);
+          // Wait a tick
+          return wait();
+        })
+        .then(() => {
+          let thisJump = element.timeCurrent;
+          // Should be equal to timeTotal
+          expect(thisJump).to.equal(element.timeTotal);
+          // Press Pg Dn arrow key
+          MockInteractions.pressAndReleaseKeyOn(bar, keyCodes.home);
+          // Wait a tick
+          return wait();
+        })
+        .then(() => {
+          let thisJump = element.timeCurrent;
+          // Should be equal to 0
+          expect(thisJump).to.be.below(1);
+          done();
+        })
+        .catch(done);
     });
   });
 </script>
