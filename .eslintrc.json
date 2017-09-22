@@ -9,7 +9,8 @@
   "env": {
     "browser": true,
     "es6": true,
-    "mocha": true
+    "mocha": true,
+    "jasmine": true
   },
   "plugins": [
     "html"
@@ -20,7 +21,8 @@
       "error",
       {
         "capIsNewExceptions": [
-          "Polymer"
+          "Polymer",
+          "Polymer.GestureEventListeners"
         ]
       }
     ],
@@ -47,11 +49,10 @@
     ]
   },
   "globals": {
-    "expect": true,
-    "Fabric": true,
+    "Polymer": true,
     "fixture": true,
     "MockInteractions": true,
-    "Polymer": true,
-    "WCT": true
+    "WCT": true,
+    "Fabric": true
   }
 }
