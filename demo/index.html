@@ -6,11 +6,12 @@
 
   <title>skeleton-player demo</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../skeleton-audio.html">
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+    import '@polymer/iron-demo-helpers/demo-snippet';
+  </script>
+  <script type="module" src="../skeleton-audio.js"></script>
 
   <style is="custom-style" include="demo-pages-shared-styles">
   </style>
@@ -20,13 +21,10 @@
   <h3>Basic skeleton-audio-player demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-audio src="http://nadikun.com/audio/pink-shades-o-pnr.mp3"
-                             controls
-                             preload
-                             autoplay
-                             events='{ "1": "event1", "6": "event2", "10": "event3"}'></skeleton-audio>
+      <skeleton-audio src="http://nadikun.com/audio/pink-shades-o-pnr.mp3" controls="" preload="" autoplay="" events="{ &quot;1&quot;: &quot;event1&quot;, &quot;6&quot;: &quot;event2&quot;, &quot;10&quot;: &quot;event3&quot;}"></skeleton-audio>
     </template>
   </demo-snippet>
 </div>
+</script>
 </body>
 </html>
