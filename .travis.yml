@@ -12,7 +12,6 @@ addons:
       - google-chrome-stable
 before_script:
   - npm install -g polymer-cli
-  - polymer install
   - npm run lint
-script:
-  - xvfb-run polymer test --skip-plugin sauce
+script: xvfb-run polymer test --module-resolution=node --npm --skip-plugin sauce
+
