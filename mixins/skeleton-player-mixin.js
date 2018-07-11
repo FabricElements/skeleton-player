@@ -53,26 +53,32 @@ Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
       playing: {
         type: Boolean,
         value: false,
+        reflectToAttribute: true,
       },
       paused: {
         type: Boolean,
         value: false,
+        reflectToAttribute: true,
       },
       ended: {
         type: Boolean,
         value: false,
+        reflectToAttribute: true,
       },
       timeOffset: {
         type: Number,
         value: 0,
+        reflectToAttribute: true,
       },
       percentagePlayed: {
         type: Number,
         value: 0,
+        reflectToAttribute: true,
       },
       duration: {
         type: Number,
         value: 0,
+        reflectToAttribute: true,
       },
       disabled: {
         type: Boolean,
@@ -81,6 +87,7 @@ Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
       error: {
         type: Boolean,
         value: false,
+        reflectToAttribute: true,
       },
       events: {
         type: Array,
@@ -94,6 +101,7 @@ Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
       loaded: {
         type: Boolean,
         value: false,
+        reflectToAttribute: true,
       },
       progress: {
         type: Number,
@@ -124,14 +132,20 @@ Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
       timeTotal: {
         type: Number,
         value: 0,
+        reflectToAttribute: true,
+        notify: true,
       },
       timeLeft: {
         type: Number,
         value: 0,
+        reflectToAttribute: true,
+        notify: true,
       },
       timeCurrent: {
         type: Number,
         value: 0,
+        reflectToAttribute: true,
+        notify: true,
       },
       firstPlayAction: {
         type: Boolean,

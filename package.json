@@ -1,7 +1,7 @@
 {
   "name": "@fabricelements/skeleton-player",
   "description": "Custom Audio and Video player using material design",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "skeleton-player.js",
   "license": "BSD-3-Clause",
   "devDependencies": {
