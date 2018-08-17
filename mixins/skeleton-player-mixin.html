@@ -54,26 +54,32 @@
         playing: {
           type: Boolean,
           value: false,
+          reflectToAttribute: true,
         },
         paused: {
           type: Boolean,
           value: false,
+          reflectToAttribute: true,
         },
         ended: {
           type: Boolean,
           value: false,
+          reflectToAttribute: true,
         },
         timeOffset: {
           type: Number,
           value: 0,
+          reflectToAttribute: true,
         },
         percentagePlayed: {
           type: Number,
           value: 0,
+          reflectToAttribute: true,
         },
         duration: {
           type: Number,
           value: 0,
+          reflectToAttribute: true,
         },
         disabled: {
           type: Boolean,
@@ -82,6 +88,7 @@
         error: {
           type: Boolean,
           value: false,
+          reflectToAttribute: true,
         },
         events: {
           type: Array,
@@ -95,6 +102,7 @@
         loaded: {
           type: Boolean,
           value: false,
+          reflectToAttribute: true,
         },
         progress: {
           type: Number,
@@ -125,14 +133,20 @@
         timeTotal: {
           type: Number,
           value: 0,
+          reflectToAttribute: true,
+          notify: true,
         },
         timeLeft: {
           type: Number,
           value: 0,
+          reflectToAttribute: true,
+          notify: true,
         },
         timeCurrent: {
           type: Number,
           value: 0,
+          reflectToAttribute: true,
+          notify: true,
         },
         firstPlayAction: {
           type: Boolean,
