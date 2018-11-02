@@ -156,6 +156,10 @@ Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
         value: 0,
         observer: '_jumpObserver',
       },
+      buggy: {
+        type: Boolean,
+        value: false,
+      },
     };
   }
 
@@ -239,8 +243,25 @@ Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
    * @private
    */
   _loadedMetadata() {
-    this.loaded = true;
     const player = this.shadowRoot.querySelector('#player');
+
+    if (player.duration === Infinity) {
+      this.buggy = true;
+      player.currentTime = Math.round(Math.random() * 1e9);
+
+      const progressBugHandler = (e) => {
+        player.currentTime = 0;
+        this.duration = player.duration;
+        player.removeEventListener('timeupdate', progressBugHandler);
+        setTimeout(() => {
+          this.buggy = false;
+        });
+      };
+
+      player.addEventListener('timeupdate', progressBugHandler);
+    }
+
+    this.loaded = true;
     this.duration = player.duration;
     this.timeLeft = player.duration;
     this.timeTotal = player.duration;
@@ -321,6 +342,7 @@ Fabric.skeletonPlayerMixin = (superclass) => class extends superclass {
    * @private
    */
   _ended() {
+    if (this.buggy) return;
     this._resetProperties();
     this.ended = true;
     this.dispatchEvent(new CustomEvent('skeleton-player-state-change', {
